@@ -3,10 +3,10 @@ available_keys: title, category, description, date, ref, author, tags: List
 title: Python: 相对引用和绝对引用，哪个更好?
 tags: Python, 工程化
 ---
-作为一个多年工作经验的Python工程师，可以说工作中在Python编程方面已遇不到什么卡点级的难题。但是我发现，很多同样有多年Python经验的同事，在相对/绝对引用的问题上搞不清楚。我认为在submodule中使用相对引用是合适的，但在一次提交merge request时，被一个曾任职于Google的权威的工程师拒绝了，意见是：[Google Python Style Guide](https://google.github.io/styleguide/pyguide.html) 禁止使用相对引用：
+我认为在submodule中使用相对引用是合适的，但在一次提交merge request时，被一个曾任职于Google的权威的工程师拒绝了，原因是：[Google Python Style Guide](https://google.github.io/styleguide/pyguide.html) 禁止使用相对引用：
 > Do not use relative names in imports. Even if the module is in the same package, use the full package name. This helps prevent unintentionally importing a package twice.
 
-暂不说这个规定是否合理，先说说Python的两种引用方式，其中相对引用就是以当前代码文件所在位置为参考点，引用其他模块，如：
+Python的两种引用方式，其中相对引用就是以当前代码文件所在位置为参考点，引用其他模块，如：
 ```python
 from . import xxx
 from ...xxx import yyy
