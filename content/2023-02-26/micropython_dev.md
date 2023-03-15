@@ -2,6 +2,7 @@
 available_keys: title, category, description, date, ref, author, tags: List
 title: MicroPython+rp2040操作IIS，很鸡肋
 tags: Python, 硬件
+category: 硬件
 ---
 
 ## 目录
