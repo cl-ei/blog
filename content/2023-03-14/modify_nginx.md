@@ -1,6 +1,6 @@
 ---
 available_keys: title, category, description, date, ref, author, tags: List
-title: 修改编译nginx以删除或自定义 "Server" Header
+title: 修改nginx源码以删除或自定义 "Server" Header
 tags: nginx
 category: nginx
 ---
