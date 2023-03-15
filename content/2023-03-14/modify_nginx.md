@@ -83,7 +83,7 @@ struct ngx_http_core_loc_conf_s {
 #endif
     ...
 ```
-实现自定义server name，我们可以把配置添加到这个块当中，在结构体中加入:
+实现自定义server name，可以把配置添加到这个块当中，在结构体中加入:
 ```C
     // add
     ngx_str_t     customized_server_name;
