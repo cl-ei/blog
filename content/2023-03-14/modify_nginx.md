@@ -67,7 +67,7 @@ Accept-Ranges: bytes
 
 ## 使其可配置
 
-在```ngx_http_header_filter```可以看到```clcf```结构体，类型为```ngx_http_core_loc_conf_t```，其为conf文件中http部分配置的解析
+在```ngx_http_header_filter```可以看到```clcf```结构体，类型为```ngx_http_core_loc_conf_t```，其为conf文件中http部分配置的解析逻辑：
 ```C
 struct ngx_http_core_loc_conf_s {
     ngx_str_t     name;          /* location name */
@@ -83,7 +83,7 @@ struct ngx_http_core_loc_conf_s {
 #endif
     ...
 ```
-实现自定义server name，可以把配置添加到这个块当中，在结构体中加入:
+实现自定义server name，可以把配置添加到这个块当中:
 ```C
     // add
     ngx_str_t     customized_server_name;
@@ -115,7 +115,7 @@ static ngx_command_t  ngx_http_core_commands[] = {
     ngx_null_command
 }
 ```
-其中`ngx_conf_set_str_slot`是nginx预置的回调函数。若在多个域同时出现配置项时，nginx需要根据某些优先规则确定使用那个配置，由此nginx实现了一个merge机制，对于没有merge函数的配置，最终不会生效。http域的merge定义在此文件```ngx_http_core_merge_loc_conf```函数中，在这里优先取子层存在的配置，若无则取上层的，否则取默认。可以添加上自定义配置项的merge函数：
+其中`ngx_conf_set_str_slot`是nginx预置的回调函数。若在多个域同时出现配置项时，nginx需要根据某些优先规则确定使用那个配置，nginx实现了一个merge机制来处理这个逻辑，对于没有merge函数的配置，最终不会生效。http域的merge定义在此文件```ngx_http_core_merge_loc_conf```函数中，在这里优先取子层存在的配置，若无则取上层的，否则取默认。可以添加上自定义配置项的merge函数：
 ```C
 static char *
 ngx_http_core_merge_loc_conf(ngx_conf_t *cf, void *parent, void *child)
@@ -129,7 +129,7 @@ ngx_http_core_merge_loc_conf(ngx_conf_t *cf, void *parent, void *child)
     ...
 }
 ```
-由此，就可以在`ngx_http_header_filter`当中获取到此配置项，修改这两处的逻辑：
+这样一来，就可以在`ngx_http_header_filter`当中获取到此配置项，修改这两处的逻辑：
 ```C
 static ngx_int_t
 ngx_http_header_filter(ngx_http_request_t *r)
@@ -158,7 +158,7 @@ ngx_http_header_filter(ngx_http_request_t *r)
     }
     ...
 ```
-需要注意```len += sizeof("Server: ") - 1 + clcf->customized_server_name.len + 2;```计算长度时，sizeof会包含字符串结尾的`\0`，在拷贝内容到buffer时必剔除这部分，由此需要减一。最后加2对应每条Header结束的`\r\n`。
+需要注意```len += sizeof("Server: ") - 1 + clcf->customized_server_name.len + 2;```计算长度时，sizeof会包含字符串结尾的`\0`，拷贝到buffer的内容不包含这部分，故需减一。每条Header结束的`\r\n`占用2字节，故在末尾加2。
 
 编译运行，并在`nginx.conf`中添加：
 ```
