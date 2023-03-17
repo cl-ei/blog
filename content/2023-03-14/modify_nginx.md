@@ -1,8 +1,8 @@
 ---
 available_keys: title, category, description, date, ref, author, tags: List
 title: 修改nginx源码以删除或自定义 "Server" Header
-tags: nginx
-category: nginx
+tags: nginx, web
+category: web
 ---
 边缘计算等对内存极其敏感的场景下，在进行HTTP通信时往往需要移除一些不必要内容以节约内存。使用nginx正向代理时，它会添加默认的Server Header，即使在nginx.conf中指定了```server_tokens off;```，也仅仅是隐藏版本号，并未去除这个Header。
 
