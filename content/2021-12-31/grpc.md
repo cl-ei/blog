@@ -322,7 +322,7 @@ python -m grpc_tools.protoc -I. --python_out=. --grpc_python_out=. pi.proto
 这个命令行有很多参数，其中python_out目录指定pi_pb2.py文件的输出路径，grpc_python_out指定pi_pb2_grpc.py文件的输出路径。-I参数指定协议文件的查找目录，我们都将它们设置为当前目录。
 
 Server:
-```
+```python
 # coding: utf-8
 # server.py
 import math
@@ -336,7 +336,6 @@ import pi_pb2_grpc
 
 # 圆周率计算服务实现类
 class PiCalculatorServicer(pi_pb2_grpc.PiCalculatorServicer):
-
     def Calc(self, request, ctx):
         # 计算圆周率的逻辑在这里
         s = 0.0
@@ -368,7 +367,7 @@ if __name__ == '__main__':
     main()
 ```
 Client：
-```
+```python
 # coding: utf-8
 # client.py
 
@@ -395,7 +394,7 @@ gRPC使用异步io模型：
 
 ![](img/grpc_async.png)
 改造一下客户端代码，使用客户端的并行 RPC 调用来计算圆周率。
-```
+```python
 # multithread_client.py
 import grpc
 
@@ -438,7 +437,7 @@ if __name__ == '__main__':
 
 ![](img/streaming.png)
 协议文件：
-```
+```protobuf
 syntax = "proto3";
 
 package pi;
@@ -461,7 +460,7 @@ message PiResponse {
 }
 ```
 Server:
-```
+```python
 def Calc(self, request_iterator, ctx):
   # request 是一个迭代器参数，对应的是一个 stream 请求
   for request in request_iterator:
@@ -476,7 +475,7 @@ def Calc(self, request_iterator, ctx):
     yield pi_pb2.PiResponse(n=i, value=math.sqrt(8 * s))
 ```
 client:
-```
+```python
 def generate_request():
   for i in range(1, 1000):
     yield pi_pb2.PiRequest(n=i)
@@ -487,7 +486,7 @@ def generate_request():
 ```
 
 处理异常
-```
+```python
 def Calc(self, request, ctx):
   if request.n <= 0:
     ctx.set_code(grpc.StatusCode.INVALID_ARGUMENT)  # 参数错误
